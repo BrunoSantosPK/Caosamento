@@ -1,36 +1,35 @@
 import { celebrate, Joi, Segments } from "celebrate";
 
 const validator = {
-    login: celebrate({
+    new: celebrate({
         [Segments.BODY]: Joi.object().keys({
-            user: Joi.string().email().required(),
+            repeatPass: Joi.string().min(6).required(),
+            email: Joi.string().email().required(),
             pass: Joi.string().min(6).required()
         })
     }),
 
-    resetPass: celebrate({
+    login: celebrate({
         [Segments.BODY]: Joi.object().keys({
-            user: Joi.string().email().required()
-        })
-    }),
-
-    updatePass: celebrate({
-        [Segments.BODY]: Joi.object().keys({
-            user: Joi.string().email().required(),
-            pass: Joi.string().min(6).required(),
-            newPass: Joi.string().min(6).required()
+            email: Joi.string().email().required(),
+            pass: Joi.string().min(6).required()
         })
     }),
 
     updateData: celebrate({
         [Segments.BODY]: Joi.object().keys({
-            name: Joi.string().min(6).required(),
-            phone: Joi.string().min(10).max(11),
-            birthDate: Joi.string().required(),
-            city: Joi.string().min(6).required(),
+            shareWhatsapp: Joi.boolean().required(),
+            whatsapp: Joi.string().min(10).max(11),
             us: Joi.string().length(2).required(),
-            gender: Joi.string().length(1).required(),
-            notifyByPhone: Joi.boolean().required()
+            name: Joi.string().min(6).required(),
+            city: Joi.string().required(),
+            uid: Joi.string().required()
+        })
+    }),
+
+    get: celebrate({
+        [Segments.PARAMS]: Joi.object().keys({
+            uid: Joi.string().required()
         })
     })
 };

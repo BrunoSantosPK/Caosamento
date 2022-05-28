@@ -28,7 +28,7 @@ export function getConfig() {
     }
 }
 
-export async function getUserData(user: string, pass: string): Promise<ResponseLogin> {
+export async function login(user: string, pass: string): Promise<ResponseLogin> {
     initializeApp(getConfig());
     const auth = getAuth();
 
@@ -52,6 +52,18 @@ export async function createUser(user: string, pass: string): Promise<ResponseLo
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 export async function resetPass(user: string): Promise<ResponseOperation> {
     initializeApp(getConfig());
     const auth = getAuth();
@@ -74,21 +86,5 @@ export async function updatePass(user: string, pass: string, newPass: string): P
         return { success: true, message: "Senha atualizada" };
     } catch(error: any) {
         return { success: false, message: error.message };
-    }
-}
-
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-export async function getUrl() {
-    try {
-        const app = initializeApp(getConfig());
-        const auth = getAuth();
-        await signInWithEmailAndPassword(auth, "bruno.19ls@gmail.com", "lambari");
-        
-        const storage = getStorage(app);
-        const forestRef = ref(storage, "pricone-01.jpg");
-        const url = await getDownloadURL(forestRef);
-        console.log(url);
-    } catch(error: any) {
-        console.log(error.message);
     }
 }
