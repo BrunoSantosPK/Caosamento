@@ -31,6 +31,21 @@ const validator = {
         [Segments.PARAMS]: Joi.object().keys({
             uid: Joi.string().required()
         })
+    }),
+
+    updatePass: celebrate({
+        [Segments.BODY]: Joi.object().keys({
+            repeatPass: Joi.string().min(6).required(),
+            oldPass: Joi.string().min(6).required(),
+            email: Joi.string().email().required(),
+            pass: Joi.string().min(6).required()
+        })
+    }),
+
+    resetPass: celebrate({
+        [Segments.BODY]: Joi.object().keys({
+            email: Joi.string().email().required()
+        })
     })
 };
 

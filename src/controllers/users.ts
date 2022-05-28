@@ -120,4 +120,46 @@ export default class UserController {
         }
     }
 
+    static async updatePass(request: Request, response: Response) {
+        const { email, oldPass, pass, repeatPass } = request.body;
+        const res = new CustomResponse();
+
+        try {
+            // Verifica se as senhas são iguais
+            if(pass != repeatPass)
+                throw new Error("As senhas não conferem.");
+
+            // Faz a atualização no firebase
+            const result = await firebase.updatePass(email, oldPass, pass);
+            if(!result.success)
+                throw new Error(result.message);
+
+        } catch(error: any) {
+            res.setMessage(error.message);
+            res.setStatus(400);
+
+        } finally {
+            return response.json(res.getJSON());
+        }
+    }
+
+    static async resetPass(request: Request, response: Response) {
+        const res = new CustomResponse();
+        const { email } = request.body;
+        
+        try {
+            // Envia requisição de auteração para firebase
+            const result = await firebase.resetPass(email);
+            if(!result.success)
+                throw new Error(result.message);
+
+        } catch(error: any) {
+            res.setMessage(error.message);
+            res.setStatus(400);
+
+        } finally {
+            return response.json(res.getJSON());
+        }
+    }
+
 }
