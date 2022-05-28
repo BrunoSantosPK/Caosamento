@@ -52,7 +52,8 @@ export default class UserController {
 
             // Pepera resposta para envio
             res.setAttr("user", {
-                uid: result.data?.user.uid
+                uid: result.data?.user.uid,
+                token: await result.data?.user.getIdToken()
             });
 
         } catch(error: any) {
@@ -152,6 +153,24 @@ export default class UserController {
             const result = await firebase.resetPass(email);
             if(!result.success)
                 throw new Error(result.message);
+
+        } catch(error: any) {
+            res.setMessage(error.message);
+            res.setStatus(400);
+
+        } finally {
+            return response.json(res.getJSON());
+        }
+    }
+
+    static async auth(request: Request, response: Response) {
+        const res = new CustomResponse();
+        const { token } = request.body;
+
+        try {
+            // Envia requisição de auteração para firebase
+            const result = await firebase.validateToken(token);
+            console.log(result);
 
         } catch(error: any) {
             res.setMessage(error.message);
