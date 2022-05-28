@@ -8,7 +8,7 @@ import CustomResponse from "../utils/response";
 export default class AnimalController {
 
     static async add(request: Request, response: Response) {
-        const { uid, name, description, breedId } = request.body;
+        const { uid, name, description, breed } = request.body;
         const client = mongo.getMongoClient();
         const res = new CustomResponse();
 
@@ -30,8 +30,8 @@ export default class AnimalController {
                 throw new Error("Usuário não encontrado na base de dados.");
 
             // Verifica id de raça informado
-            const breed = await breeds.findOne({ _id: new ObjectId(breedId) });
-            if(breed == null)
+            const bd: any = await breeds.findOne({ _id: new ObjectId(breed) });
+            if(bd == null)
                 throw new Error("Raça não cadastrada no sistema.");
 
             // Faz a padronização do nome de arquivo
@@ -45,7 +45,7 @@ export default class AnimalController {
 
             // Realiza o cadastro de novo PET
             const pet = {
-                photo: fileName, uid, name, description, breedId, breedName: breed.name,
+                photo: fileName, uid, name, description, breed, breedName: bd.name,
                 city: user.city, country: user.country, us: user.us, email: user.email
             };
             const insert = await pets.insertOne(pet);

@@ -6,7 +6,7 @@ const validator = {
             uid: Joi.string().required(),
             name: Joi.string().min(6).required(),
             description: Joi.string().min(10).required(),
-            breedId: Joi.string().required()
+            breed: Joi.string().required()
         })
     }),
 
