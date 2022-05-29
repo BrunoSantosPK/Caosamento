@@ -5,7 +5,7 @@
 O Cãosamento é um sistema que busca prover uma arquietura facilidade para donos de PETs conseguirem encontrar parceiros para a cruza. A partir dele, fica fácil buscar e consultar as opções disponíveis, criando um ecossistema colaborativo.
 
 ## Composição
-O Cãosamento possui duas partes, a API (este reposítório) e a aplicação mobile Android (repositório em breve). A API é responsável por permitir a gestão de informações no banco de dados, bem como garantir autenticação dos usuários e segurança da informação.
+O Cãosamento possui duas partes, a API (este reposítório) e a aplicação mobile Android (disponível [aqui](https://github.com/BrunoSantosPK/CaosamentoApp)). A API é responsável por permitir a gestão de informações no banco de dados, bem como garantir autenticação dos usuários e segurança da informação.
 
 Para lidar com usuários, atualmente foi adotado o Firebase, que permite grande tração nesta tarefa. Já para o armazenamento foi adotado o MongoDB, permitindo alta escalabilidade nos documentos de agendamento, bem como flexibilidade para implementações de features e informações que podem ser geradas pelos usuários.
 
