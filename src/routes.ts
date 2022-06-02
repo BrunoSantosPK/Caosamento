@@ -29,7 +29,7 @@ routes.get("/user/:uid", AuthController.token, UserValidator.get, UserController
 routes.put("/user", AuthController.token, UserValidator.updateData, UserController.updateData);
 
 routes.post("/login", UserValidator.login, UserController.login);
-routes.post("/pass", AuthController.token, UserValidator.resetPass, UserController.resetPass);
+routes.post("/pass", UserValidator.resetPass, UserController.resetPass);
 routes.put("/pass", AuthController.token, UserValidator.updatePass, UserController.updatePass);
 
 routes.use("/static", express.static(path.join(__dirname, "public")));

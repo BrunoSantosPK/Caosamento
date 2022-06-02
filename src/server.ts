@@ -4,10 +4,8 @@ import express from "express";
 import { config } from "dotenv";
 import { errors } from "celebrate";
 
+config({path: path.join(__dirname, "config", ".env")});
 import routes from "./routes";
-import { getConfig } from "./utils/firebase";
-import { initializeApp } from "firebase-admin/app";
-import { initializeApp as initializeAppAdmin } from "firebase-admin/app";
 
 // Inicializa aplicação firebase
 config({path: path.join(__dirname, "config", ".env")});

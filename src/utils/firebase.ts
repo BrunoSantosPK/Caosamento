@@ -2,6 +2,7 @@ import * as firebase from "firebase/app";
 import * as firebaseAuth from "firebase/auth";
 import * as firebaseAdmin from "firebase-admin/app";
 import * as firebaseAuthAdmin from "firebase-admin/auth";
+import admApp from "./configFirebase";
 
 type ResponseAuth = {
     success: boolean,
@@ -77,7 +78,7 @@ export async function resetPass(user: string): Promise<ResponseAuth> {
 
 export async function validateToken(token: string): Promise<ResponseAuth> {
     try {
-        firebaseAdmin.initializeApp(getConfig());
+        admApp;
         const auth = firebaseAuthAdmin.getAuth();
 
         const res = await auth.verifyIdToken(token);
