@@ -21,6 +21,7 @@ routes.get("/breed", AuthController.token, BreedController.get);
 routes.post("/breed", AuthController.token, BreedValidator.new, BreedController.new);
 
 routes.get("/animal", AuthController.token, AnimalValidator.search, AnimalController.search);
+routes.delete("/animal", AuthController.token, AnimalValidator.delete, AnimalController.delete);
 routes.get("/animal/:uid", AuthController.token, AnimalValidator.getByUser, AnimalController.getByUser);
 routes.post("/animal", AuthController.token, uploadPhoto.single("photo"), AnimalValidator.add, AnimalController.add);
 

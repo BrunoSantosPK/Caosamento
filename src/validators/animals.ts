@@ -21,9 +21,15 @@ const validator = {
             page: Joi.number().min(1).required(),
             breed: Joi.string().required(),
             uid: Joi.string().required(),
-            us: Joi.string().length(2),
+            uf: Joi.string().length(2),
             city: Joi.string()
         }
+    }),
+
+    delete: celebrate({
+        [Segments.BODY]: Joi.object().keys({
+            animal: Joi.string().required()
+        })
     })
 };
 

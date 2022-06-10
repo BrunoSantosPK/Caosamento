@@ -66,7 +66,7 @@ export default class UserController {
     }
 
     static async updateData(request: Request, response: Response) {
-        const { uid, us, city, shareWhatsapp, whatsapp, name } = request.body;
+        const { uid, uf, city, shareWhatsapp, whatsapp, name } = request.body;
         const client = mongo.getMongoClient();
         const res = new CustomResponse();
 
@@ -81,7 +81,7 @@ export default class UserController {
                 throw new Error("Se deseja compartilhar whatsapp, informe um número com DDD.");
 
             // Cria documento de atualização
-            const doc: any = { uid, us, city, name, shareWhatsapp, country: "Brasil" };
+            const doc: any = { uid, uf, city, name, shareWhatsapp, country: "Brasil" };
             if(whatsapp != undefined)
                 doc.whatsapp = whatsapp;
 

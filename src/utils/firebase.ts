@@ -76,6 +76,18 @@ export async function resetPass(user: string): Promise<ResponseAuth> {
     }
 }
 
+export async function deleteUser(user: string, pass: string) {
+    try {
+        firebase.initializeApp(getConfig());
+        const auth = firebaseAuth.getAuth();
+        await firebaseAuth.signInWithEmailAndPassword(auth, user, pass);
+        await firebaseAuth.deleteUser(auth.currentUser as firebaseAuth.User);
+        return { success: true, message: "ok" };
+    } catch(error: any) {
+        return { success: false, message: error.message };
+    }
+}
+
 export async function validateToken(token: string): Promise<ResponseAuth> {
     try {
         admApp;

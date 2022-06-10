@@ -37,7 +37,7 @@ A validação requer sempre o envio de duas informações no `headers`:
 
 **`PUT /user`**: Responsável por adicionar dados pessoais ao usuário. Necessita do `header` de autenticação. Recebe no corpo:
 - name: Texto com o nome do usuário
-- us: Sigla do estado do usuário
+- uf: Sigla do estado do usuário
 - city: Nome da cidade do usuário
 - uid: Identificador do usuário recuperado via `/login`
 - shareWhatsapp: Valor boolean que informa se o usuário deseja compartilhar número de telefone como contato
@@ -64,7 +64,7 @@ A validação requer sempre o envio de duas informações no `headers`:
 - page: Número para referenciar a página que será retornada
 - breed: Identificador da raça, obtido por meio da rota `/breed`
 - uid: Identificador do usuário recuperado via `/login`
-- us: Sigla do estado para buscar o animal
+- uf: Sigla do estado para buscar o animal
 - city: Nome da cidade para buscar o animal
 
 **`GET /animal/:uid`**: Responsável por recuperar todos os PETs de um usuário. Necessita do `header` de autenticação.
@@ -76,3 +76,6 @@ A validação requer sempre o envio de duas informações no `headers`:
 - description: Texto com breve descrição sobre o PET
 - breed: Identificador da raça, obtido por meio da rota `/breed`
 - photo: Arquivo de imagem para caracterizar o PET
+
+**`DELETE /animal`**: Responsável por deletar um registro de PET no sistema. Necessita do `header` de autenticação. Recebe no corpo:
+- uid: Identificador do usuário recuperado via `/login`

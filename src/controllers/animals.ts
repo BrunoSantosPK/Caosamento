@@ -46,7 +46,7 @@ export default class AnimalController {
             // Realiza o cadastro de novo PET
             const pet = {
                 photo: fileName, uid, name, description, breed, breedName: bd.name,
-                city: user.city, country: user.country, us: user.us, email: user.email
+                city: user.city, country: user.country, uf: user.uf, email: user.email
             };
             const insert = await pets.insertOne(pet);
             res.setAttr("newAnimal", pet);
@@ -87,7 +87,7 @@ export default class AnimalController {
     }
 
     static async search(request: Request, response: Response) {
-        const { breed, us, city, page, uid } = request.query;
+        const { breed, uf, city, page, uid } = request.query;
         const client = mongo.getMongoClient();
         const res = new CustomResponse();
 
@@ -99,7 +99,7 @@ export default class AnimalController {
 
             // Cria o sistema de filtro
             const filter: any = { breedId: breed, uid: { $ne: uid } };
-            if(us != undefined) filter.us = us;
+            if(uf != undefined) filter.uf = uf;
             if(city != undefined) filter.city = city;
 
             // Fas o ajuste de paginação
@@ -111,6 +111,41 @@ export default class AnimalController {
             const pets = await collection.find(filter).skip(skip).limit(pageSize).toArray();
             res.setAttr("page", getPage);
             res.setAttr("pets", pets);
+
+        } catch(error: any) {
+            res.setMessage(error.message);
+            res.setStatus(400);
+
+        } finally {
+            await client.close();
+            return response.json(res.getJSON());
+        }
+    }
+
+    static async delete(request: Request, response: Response) {
+        const client = mongo.getMongoClient();
+        const res = new CustomResponse();
+        const { animal } = request.body;
+
+        try {
+            // Conexão com banco de dados
+            await client.connect();
+            const database = mongo.getDatabase(client);
+            const collection = mongo.getCollectionPets(database);
+
+            // Verifica dados do documento
+            const filter = { _id: new ObjectId(animal) };
+            const document = await collection.findOne(filter);
+            if(document == null)
+                throw new Error("O id informado não foi encontrado.");
+
+            // Apaga o documento e remove a imagem do servidor
+            const filePath = path.join(__dirname, "..", "public", document.photo);
+            const result = await collection.deleteOne(filter);
+            fs.unlink(filePath, error => {
+                if(error)
+                    throw new Error("Não foi possível remover a foto de perfil.");
+            });
 
         } catch(error: any) {
             res.setMessage(error.message);
