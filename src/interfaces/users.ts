@@ -1,3 +1,17 @@
+import { ObjectId } from "mongodb";
+
+export interface User {
+    _id: ObjectId;
+    email: string;
+    uid: string;
+    city?: string;
+    shareWhatsapp?: boolean;
+    whatsapp?: string;
+    country?: string;
+    name?: string;
+    uf?: string;
+}
+
 export interface UserNew {
     statusCode: number;
     message: string;

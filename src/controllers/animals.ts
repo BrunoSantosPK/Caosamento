@@ -1,9 +1,11 @@
 import fs from "fs";
 import path from "path";
 import { ObjectId } from "mongodb";
+import { User } from "../interfaces/users";
 import { Request, Response } from "express";
 import * as mongo from "../database/connect";
 import CustomResponse from "../utils/response";
+import { Animal } from "../interfaces/animals";
 
 export default class AnimalController {
 
@@ -44,10 +46,7 @@ export default class AnimalController {
             });
 
             // Realiza o cadastro de novo PET
-            const pet = {
-                photo: fileName, uid, name, description, breed, breedName: bd.name,
-                city: user.city, country: user.country, uf: user.uf, email: user.email
-            };
+            const pet = { photo: fileName, uid, name, description, breed, breedName: bd.name };
             const insert = await pets.insertOne(pet);
             res.setAttr("newAnimal", pet);
 
@@ -95,22 +94,52 @@ export default class AnimalController {
             // Conexão com banco de dados
             await client.connect();
             const database = mongo.getDatabase(client);
-            const collection = mongo.getCollectionPets(database);
+            const users = mongo.getCollectionUsers(database);
+            const animals = mongo.getCollectionPets(database);
 
-            // Cria o sistema de filtro
-            const filter: any = { breedId: breed, uid: { $ne: uid } };
-            if(uf != undefined) filter.uf = uf;
-            if(city != undefined) filter.city = city;
+            // Verifica os filtros de cidade e estado
+            const filterUser: any = {};
+            if(uf != undefined) filterUser.uf = uf;
+            if(city != undefined) filterUser.city = city;
 
-            // Fas o ajuste de paginação
+            // Busca usuários que satisfazem o filtro
+            const usersId: Array<string> = [];
+            let usersData: Array<User>;
+            if(Object.keys(filterUser).length > 0) {
+                filterUser.uid = { $ne: uid };
+                usersData = await users.find(filterUser).toArray() as Array<User>;
+                usersData.forEach(item => usersId.push(item.uid));
+            }
+
+            // Cria o filtro para busca de animal
+            const filterAnimal: any = { breedId: breed };
+            if(usersId.length == 0)
+                filterAnimal.uid = { $ne: uid };
+            else
+                filterAnimal.uid = { $in: usersId };
+
+            // Faz o ajuste de paginação
             const pageSize = 50;
             const getPage = parseInt(page as string);
             const skip = (getPage - 1) * pageSize;
 
             // Recupera pets de acordo com os filtros passados
-            const pets = await collection.find(filter).skip(skip).limit(pageSize).toArray();
+            const data: any = [];
+            const pets = await animals.find(filterAnimal).skip(skip).limit(pageSize).toArray() as Array<Animal>;
+            pets.forEach(item => {
+                let match = usersData.find(element => element.uid == item.uid);
+                data.push({
+                    ...item,
+                    shareWhatsapp: match?.shareWhatsapp,
+                    whatsapp: match?.whatsapp,
+                    email: match?.email,
+                    city: match?.city,
+                    uf: match?.uf
+                })
+            });
+
             res.setAttr("page", getPage);
-            res.setAttr("pets", pets);
+            res.setAttr("pets", data);
 
         } catch(error: any) {
             res.setMessage(error.message);
